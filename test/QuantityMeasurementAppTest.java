@@ -3,60 +3,74 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class QuantityMeasurementAppTest {
     @Test
-    void testFeet_SameValue() {
-        assertTrue(QuantityMeasurementApp.compareFeet(1.0, 1.0));
+    void testEquality_FeetToFeet_SameValue() {
+        var q1 = new QuantityMeasurementApp.QuantityLength(1.0, QuantityMeasurementApp.LengthUnit.FEET);
+        var q2 = new QuantityMeasurementApp.QuantityLength(1.0, QuantityMeasurementApp.LengthUnit.FEET);
+
+        assertEquals(q1, q2);
     }
 
     @Test
-    void testFeet_DifferentValue() {
-        assertFalse(QuantityMeasurementApp.compareFeet(1.0, 2.0));
+    void testEquality_InchToInch_SameValue() {
+        var q1 = new QuantityMeasurementApp.QuantityLength(1.0, QuantityMeasurementApp.LengthUnit.INCH);
+        var q2 = new QuantityMeasurementApp.QuantityLength(1.0, QuantityMeasurementApp.LengthUnit.INCH);
+
+        assertEquals(q1, q2);
+    }
+
+    // Cross Unit Tests
+    @Test
+    void testEquality_FeetToInch_EquivalentValue() {
+        var q1 = new QuantityMeasurementApp.QuantityLength(1.0, QuantityMeasurementApp.LengthUnit.FEET);
+        var q2 = new QuantityMeasurementApp.QuantityLength(12.0, QuantityMeasurementApp.LengthUnit.INCH);
+
+        assertEquals(q1, q2);
     }
 
     @Test
-    void testFeet_NullComparison() {
-        QuantityMeasurementApp.Feet value = new QuantityMeasurementApp.Feet(1.0);
-        assertNotEquals(value, null);
+    void testEquality_InchToFeet_EquivalentValue() {
+        var q1 = new QuantityMeasurementApp.QuantityLength(12.0, QuantityMeasurementApp.LengthUnit.INCH);
+        var q2 = new QuantityMeasurementApp.QuantityLength(1.0, QuantityMeasurementApp.LengthUnit.FEET);
+
+        assertEquals(q1, q2);
+    }
+
+    // Different Values
+    @Test
+    void testEquality_FeetToFeet_DifferentValue() {
+        var q1 = new QuantityMeasurementApp.QuantityLength(1.0, QuantityMeasurementApp.LengthUnit.FEET);
+        var q2 = new QuantityMeasurementApp.QuantityLength(2.0, QuantityMeasurementApp.LengthUnit.FEET);
+
+        assertNotEquals(q1, q2);
     }
 
     @Test
-    void testFeet_NonNumericInput() {
-        QuantityMeasurementApp.Feet value = new QuantityMeasurementApp.Feet(1.0);
-        assertNotEquals(value, "1.0");
+    void testEquality_InchToInch_DifferentValue() {
+        var q1 = new QuantityMeasurementApp.QuantityLength(1.0, QuantityMeasurementApp.LengthUnit.INCH);
+        var q2 = new QuantityMeasurementApp.QuantityLength(2.0, QuantityMeasurementApp.LengthUnit.INCH);
+
+        assertNotEquals(q1, q2);
+    }
+
+    // Edge Cases
+    @Test
+    void testEquality_SameReference() {
+        var q = new QuantityMeasurementApp.QuantityLength(1.0, QuantityMeasurementApp.LengthUnit.FEET);
+
+        assertEquals(q, q);
     }
 
     @Test
-    void testFeet_SameReference() {
-        QuantityMeasurementApp.Feet value = new QuantityMeasurementApp.Feet(1.0);
-        assertEquals(value, value);
-    }
+    void testEquality_NullComparison() {
+        var q = new QuantityMeasurementApp.QuantityLength(1.0, QuantityMeasurementApp.LengthUnit.FEET);
 
-    // ---------- INCHES TESTS ----------
-
-    @Test
-    void testInches_SameValue() {
-        assertTrue(QuantityMeasurementApp.compareInches(1.0, 1.0));
+        assertNotEquals(q, null);
     }
 
     @Test
-    void testInches_DifferentValue() {
-        assertFalse(QuantityMeasurementApp.compareInches(1.0, 2.0));
-    }
-
-    @Test
-    void testInches_NullComparison() {
-        QuantityMeasurementApp.Inches value = new QuantityMeasurementApp.Inches(1.0);
-        assertNotEquals(value, null);
-    }
-
-    @Test
-    void testInches_NonNumericInput() {
-        QuantityMeasurementApp.Inches value = new QuantityMeasurementApp.Inches(1.0);
-        assertNotEquals(value, "1.0");
-    }
-
-    @Test
-    void testInches_SameReference() {
-        QuantityMeasurementApp.Inches value = new QuantityMeasurementApp.Inches(1.0);
-        assertEquals(value, value);
+    void testEquality_NullUnit() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            new QuantityMeasurementApp.QuantityLength(1.0, null);
+        });
     }
 }
